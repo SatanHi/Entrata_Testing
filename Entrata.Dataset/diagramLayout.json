@@ -71,6 +71,70 @@
             "width": 234
           },
           "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1704,
+            "y": 0
+          },
+          "nodeIndex": "NOI_MONTHLY",
+          "nodeLineageTag": "b2e8977c-af2d-435c-b753-637975c444f2",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1420,
+            "y": 98
+          },
+          "nodeIndex": "Measure Asset Management",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1988,
+            "y": 0
+          },
+          "nodeIndex": "MAINTENANCE_REQUEST_DAILY",
+          "nodeLineageTag": "ea3babfe-861d-423c-bfdc-46c8a97755e5",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2272,
+            "y": 0
+          },
+          "nodeIndex": "UNIT_SPACE_RENT_GROWTH_DAILY",
+          "nodeLineageTag": "2f54d269-72b5-41ea-b2f6-19726134a2bb",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2556,
+            "y": 0
+          },
+          "nodeIndex": "LEASE_EXPIRATION_DAILY",
+          "nodeLineageTag": "aa6949ca-6b4b-4adf-968f-04bfbfdbb9f0",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",
