@@ -4645,6 +4645,16 @@
       },
       {
         "name": "LEASE_EXPIRATION_DAILY",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "Client ID",
@@ -5024,12 +5034,9 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"),",
-                "    ENTRATA_BI_Database = Source{[Name=\"ENTRATA_BI\",Kind=\"Database\"]}[Data],",
-                "    DASHBOARD_Schema = ENTRATA_BI_Database{[Name=\"DASHBOARD\",Kind=\"Schema\"]}[Data],",
-                "    LEASE_EXPIRATION_DAILY_View = DASHBOARD_Schema{[Name=\"LEASE_EXPIRATION_DAILY\",Kind=\"View\"]}[Data]",
+                "    Source = Value.NativeQuery(Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"){[Name=\"ENTRATA_BI\"]}[Data], \"SELECT DISTINCT *#(lf)FROM #(lf)ENTRATA_BI.DASHBOARD.LEASE_EXPIRATION_DAILY\", null, [EnableFolding=true])",
                 "in",
-                "    LEASE_EXPIRATION_DAILY_View"
+                "    Source"
               ],
               "type": "m"
             }
