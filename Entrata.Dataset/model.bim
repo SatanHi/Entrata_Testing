@@ -12,7 +12,7 @@
       },
       {
         "name": "PBI_QueryOrder",
-        "value": "[\"UNIT_OCCUPANCY_DAILY\",\"PROPERTY_AGE_RECEIVABLES_MONTHLY\",\"LEASE_PROGRESSION_DAILY\",\"TRANSACTION_CHARGES_COLLECTIONS_MONTHLY\",\"Measure Asset Management\",\"NOI_MONTHLY\",\"MAINTENANCE_REQUEST_DAILY\",\"UNIT_SPACE_RENT_GROWTH_DAILY\",\"LEASE_EXPIRATION_DAILY\"]"
+        "value": "[\"UNIT_OCCUPANCY_DAILY\",\"PROPERTY_AGE_RECEIVABLES_MONTHLY\",\"LEASE_PROGRESSION_DAILY\",\"TRANSACTION_CHARGES_COLLECTIONS_MONTHLY\",\"Measure Asset Management\",\"NOI_MONTHLY\",\"MAINTENANCE_REQUEST_DAILY\",\"UNIT_SPACE_RENT_GROWTH_DAILY\",\"LEASE_EXPIRATION_DAILY\",\"Measure Property Performance\"]"
       },
       {
         "name": "PBI_ProTooling",
@@ -3188,6 +3188,30 @@
             ],
             "formatString": "0",
             "lineageTag": "82b9b308-cc25-4664-a75a-7d525e398eaf"
+          },
+          {
+            "name": "Occupancy Monthly",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "IF(",
+              "    AVERAGE(",
+              "        UNIT_OCCUPANCY_DAILY[Rentable Unit Count]",
+              "    ) = 0,",
+              "    0,",
+              "    AVERAGEX(",
+              "        UNIT_OCCUPANCY_DAILY,",
+              "        UNIT_OCCUPANCY_DAILY[Occupied Unit Count] / ",
+              "        UNIT_OCCUPANCY_DAILY[Rentable Unit Count]",
+              "    )",
+              ")"
+            ],
+            "lineageTag": "05274163-a1a2-4e0a-bae7-ba1115c59e6d"
           }
         ],
         "partitions": [
@@ -4969,6 +4993,59 @@
                 "    LEASE_EXPIRATION_DAILY_View = DASHBOARD_Schema{[Name=\"LEASE_EXPIRATION_DAILY\",Kind=\"View\"]}[Data]",
                 "in",
                 "    LEASE_EXPIRATION_DAILY_View"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Measure Property Performance",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Column1",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e78a6b6f-d873-46b9-b3e8-d4da80397b37",
+            "sourceColumn": "Column1",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "111bfbea-0229-4a2f-bbd9-ee4ed35976fb",
+        "measures": [
+          {
+            "name": "Dim Selection",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    SELECTEDVALUE(d))"
+            ],
+            "lineageTag": "9098bd02-d740-4b88-bd79-4a3ca3c651f1"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Measure Property Performance",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i44FAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Column1\", type text}})",
+                "in",
+                "    #\"Changed Type\""
               ],
               "type": "m"
             }

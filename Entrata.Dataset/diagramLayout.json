@@ -135,6 +135,19 @@
             "width": 234
           },
           "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2840,
+            "y": 98
+          },
+          "nodeIndex": "Measure Property Performance",
+          "nodeLineageTag": "111bfbea-0229-4a2f-bbd9-ee4ed35976fb",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",
