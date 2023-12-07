@@ -1832,13 +1832,10 @@
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ],
             "dataType": "double",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "717ec7a0-2026-4450-a516-eeb0e9c6ca0f",
             "sourceColumn": "Aged Receivables 0 to 30",
             "summarizeBy": "sum"
@@ -1849,13 +1846,10 @@
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ],
             "dataType": "double",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "06d4dcc5-e784-48b5-8440-e79657cef61b",
             "sourceColumn": "Aged Receivables 31 to 60",
             "summarizeBy": "sum"
@@ -1866,13 +1860,10 @@
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ],
             "dataType": "double",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "5b8a4fd7-fee3-49f6-a37f-b24cbc028a61",
             "sourceColumn": "Aged Receivables 61 to 90",
             "summarizeBy": "sum"
@@ -1883,13 +1874,10 @@
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ],
             "dataType": "double",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "a77b3179-de54-4e23-951d-419635274ec1",
             "sourceColumn": "Aged Receivables 90+",
             "summarizeBy": "sum"
@@ -1921,6 +1909,24 @@
             "lineageTag": "7bb89ec2-c9e4-4e92-82f7-ca13052cc1ad",
             "sourceColumn": "Audit Inserted On",
             "summarizeBy": "none"
+          },
+          {
+            "name": "AgeReceivable",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "\"Age Receivable Buckets\""
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "e2a7928f-5438-4780-b946-fd23996e5fa9",
+            "summarizeBy": "none",
+            "type": "calculated"
           }
         ],
         "lineageTag": "668ee836-9322-498f-b1c9-000ebb12adf6",
@@ -3190,6 +3196,19 @@
               ""
             ],
             "lineageTag": "05274163-a1a2-4e0a-bae7-ba1115c59e6d"
+          },
+          {
+            "name": "Property ID (DistinctCount)",
+            "expression": [
+              "",
+              "COUNTROWS(",
+              "    VALUES(",
+              "        UNIT_OCCUPANCY_DAILY[Property ID]",
+              "    )",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "7189df3d-33f7-419b-b99c-670b8f47b909"
           }
         ],
         "partitions": [
@@ -4984,6 +5003,26 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date Difference",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "expression": [
+              "",
+              "COALESCE(",
+              "    IF(",
+              "        SELECTEDVALUE(MAINTENANCE_REQUEST_DAILY[Maintenance Status Type]) = \"Opened\",open))"
+            ],
+            "lineageTag": "dd6c7cd2-16ba-47e6-9f1d-fbe64cb8dbc5",
+            "summarizeBy": "none",
+            "type": "calculated"
           }
         ],
         "lineageTag": "111bfbea-0229-4a2f-bbd9-ee4ed35976fb",
