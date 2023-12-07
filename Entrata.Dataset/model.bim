@@ -2807,24 +2807,17 @@
             "name": "NOI Actual",
             "expression": [
               "",
-              "VAR IncomeAmount =",
-              "SUMX(",
-              "    FILTER(",
-              "        NOI_MONTHLY,",
-              "        NOI_MONTHLY[GL Account Type Name] =\"Income\"),",
-              "        NOI_MONTHLY[Actual Amount]",
-              ")",
-              "VAR ExpensesAmount =",
-              "SUMX(",
-              "    FILTER(",
-              "        NOI_MONTHLY,",
-              "        NOI_MONTHLY[GL Account Type Name] = \"Expenses\"),",
-              "        NOI_MONTHLY[Actual Amount]",
-              ")",
-              "RETURN",
-              "ROUND(",
-              "    IncomeAmount - ExpensesAmount,2",
-              ")"
+              "CALCULATE(",
+              "    SUM(NOI_MONTHLY[Actual Amount]),",
+              "    NOI_MONTHLY[GL Account Type Name]=\"Income\" && NOI_MONTHLY[NOI GL Group]=\"Net Income/(Loss)\"",
+              "    && YEAR(NOI_MONTHLY[Post Month])=YEAR(TODAY()) && NOI_MONTHLY[Post Month]<TODAY()",
+              "    )",
+              "    -",
+              " CALCULATE(",
+              "       SUM(NOI_MONTHLY[Actual Amount]),",
+              "       NOI_MONTHLY[GL Account Type Name]=\"Expense\" && NOI_MONTHLY[NOI GL Group]=\"Net Income/(Loss)\"",
+              "       && YEAR(NOI_MONTHLY[Post Month])=YEAR(TODAY()) && NOI_MONTHLY[Post Month]<TODAY()",
+              "       )"
             ],
             "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "0197beb5-09e9-48e7-bc44-97a40e587d2d"
@@ -3209,6 +3202,18 @@
             ],
             "formatString": "0",
             "lineageTag": "7189df3d-33f7-419b-b99c-670b8f47b909"
+          },
+          {
+            "name": "NOI Budget YTD",
+            "expression": [
+              "",
+              " CALCULATE(",
+              "    SUM(NOI_MONTHLY[Budgeted Amount]),",
+              "    YEAR(NOI_MONTHLY[Post Month])=YEAR(TODAY()) && NOI_MONTHLY[Post Month]<TODAY()",
+              "    )"
+            ],
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+            "lineageTag": "53d0e880-ffb1-473a-a27f-86e6931823bd"
           }
         ],
         "partitions": [
@@ -3231,6 +3236,16 @@
       },
       {
         "name": "NOI_MONTHLY",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "Client ID",
@@ -3607,12 +3622,9 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"),",
-                "    ENTRATA_BI_Database = Source{[Name=\"ENTRATA_BI\",Kind=\"Database\"]}[Data],",
-                "    DASHBOARD_Schema = ENTRATA_BI_Database{[Name=\"DASHBOARD\",Kind=\"Schema\"]}[Data],",
-                "    NOI_MONTHLY_View = DASHBOARD_Schema{[Name=\"NOI_MONTHLY\",Kind=\"View\"]}[Data]",
+                "    Source = Value.NativeQuery(Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"){[Name=\"ENTRATA_BI\"]}[Data], \"SELECT DISTINCT *#(lf)FROM #(lf)ENTRATA_BI.DASHBOARD.NOI_MONTHLY\", null, [EnableFolding=true])",
                 "in",
-                "    NOI_MONTHLY_View"
+                "    Source"
               ],
               "type": "m"
             }
@@ -4031,6 +4043,33 @@
             "lineageTag": "7688387e-ba24-475d-8c07-95480de76986",
             "sourceColumn": "Audit Inserted On",
             "summarizeBy": "none"
+          },
+          {
+            "name": "AgeingBucket",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    DATEDIFF(TODAY(),MAINTENANCE_REQUEST_DAILY[Opened On],DAY)<= 2,\"0-2 Days\",",
+              "    DATEDIFF(TODAY(),MAINTENANCE_REQUEST_DAILY[Opened On],DAY)<= 5,\"3-5 Days\",",
+              "    DATEDIFF(TODAY(),MAINTENANCE_REQUEST_DAILY[Opened On],DAY)<= 14,\"6-14 Days\",",
+              "    DATEDIFF(TODAY(),MAINTENANCE_REQUEST_DAILY[Opened On],DAY)<= 30,\"15-30 Days\",",
+              "    DATEDIFF(TODAY(),MAINTENANCE_REQUEST_DAILY[Opened On],DAY)<= 60,\"31-60 Days\",",
+              "    DATEDIFF(TODAY(),MAINTENANCE_REQUEST_DAILY[Opened On],DAY)<= 90,\"61-90 Days\",",
+              "    TRUE(),\"90+\"",
+              ")"
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "495645cc-72e5-4312-98ab-7c7c98c627f1",
+            "summarizeBy": "none",
+            "type": "calculated"
           }
         ],
         "lineageTag": "ea3babfe-861d-423c-bfdc-46c8a97755e5",
@@ -5192,6 +5231,47 @@
             ],
             "formatString": "0",
             "lineageTag": "feee251e-ddb4-49bd-bde3-c35c725d3941"
+          },
+          {
+            "name": "AgeReceviableBalance",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "SUMX(",
+              "    PROPERTY_AGE_RECEIVABLES_MONTHLY,",
+              "    SWITCH(",
+              "        PROPERTY_AGE_RECEIVABLES_MONTHLY[AgeReceivable],",
+              "        \"all\",PROPERTY_AGE_RECEIVABLES_MONTHLY[Unpaid],",
+              "        \"0-30\",PROPERTY_AGE_RECEIVABLES_MONTHLY[Aged Receivables 0 to 30],",
+              "        \"31-60\",PROPERTY_AGE_RECEIVABLES_MONTHLY[Aged Receivables 31 to 60],",
+              "        \"61-90\",PROPERTY_AGE_RECEIVABLES_MONTHLY[Aged Receivables 61 to 90],",
+              "        \"90+\",PROPERTY_AGE_RECEIVABLES_MONTHLY[Aged Receivables 90+],",
+              "        BLANK()",
+              "    )",
+              ")",
+              "        "
+            ],
+            "lineageTag": "62a71ff4-0781-4f9a-b243-62c6a3c6744f"
+          },
+          {
+            "name": "Net Performed Move-ins1",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "SUM(LEASE_PROGRESSION_DAILY[Performed Move-in Count]) - ",
+              "SUM(LEASE_PROGRESSION_DAILY[Performed Move-out Count])"
+            ],
+            "lineageTag": "af210ffa-0f60-4cf3-ae5d-14e3c4215855"
           }
         ],
         "partitions": [
