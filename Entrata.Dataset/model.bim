@@ -27,27 +27,6 @@
           "content": {
             "DynamicImprovement": "HighConfidence",
             "Entities": {
-              "unit_occupancy_daily.month_evnt": {
-                "Definition": {
-                  "Binding": {
-                    "ConceptualEntity": "UNIT_OCCUPANCY_DAILY",
-                    "ConceptualProperty": "Month Evnt"
-                  }
-                },
-                "State": "Generated",
-                "Terms": [
-                  {
-                    "Month": {
-                      "Source": {
-                        "Agent": "PowerBI.VisualColumnRename",
-                        "Type": "External"
-                      },
-                      "State": "Suggested",
-                      "Weight": 0.9
-                    }
-                  }
-                ]
-              },
               "unit_occupancy_daily.quarter_year": {
                 "Definition": {
                   "Binding": {
@@ -306,10 +285,14 @@
               {
                 "name": "UnderlyingDateTimeDataType",
                 "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
               }
             ],
             "dataType": "dateTime",
-            "formatString": "Long Date",
+            "formatString": "mmmm yyyy",
             "lineageTag": "309d40e2-5411-467f-bada-48812a90855b",
             "sourceColumn": "Event Date",
             "summarizeBy": "none"
@@ -1214,6 +1197,11 @@
                 "value": "Automatic"
               }
             ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
             "dataType": "string",
             "expression": [
               "",
@@ -1238,6 +1226,7 @@
             ],
             "isDataTypeInferred": true,
             "lineageTag": "4cda86b3-a1fc-4248-b9c1-6fff805de009",
+            "sortByColumn": "WEEKDAYSORT",
             "summarizeBy": "none",
             "type": "calculated"
           },
@@ -1260,24 +1249,6 @@
             "type": "calculated"
           },
           {
-            "name": "Month Evnt",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "expression": [
-              "",
-              "FORMAT(UNIT_OCCUPANCY_DAILY[Event Date],\"MMM\")"
-            ],
-            "isDataTypeInferred": true,
-            "lineageTag": "bdc2f40b-cc11-400a-88b4-b260cfd9976f",
-            "summarizeBy": "none",
-            "type": "calculated"
-          },
-          {
             "name": "MonthYearnum",
             "annotations": [
               {
@@ -1296,6 +1267,114 @@
             "isDataTypeInferred": true,
             "lineageTag": "81055a53-eb7a-4c2f-9924-24ffea40056e",
             "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Scheduled Rent Occupied Units",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "",
+              "IF(",
+              "    (UNIT_OCCUPANCY_DAILY[Occupied Unit Count])= 1,",
+              "    (UNIT_OCCUPANCY_DAILY[Scheduled Rent])",
+              ")"
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "c057bed5-2e3e-431f-b6eb-e9de66c707ec",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          },
+          {
+            "name": "Month Event",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "FORMAT(",
+              "    UNIT_OCCUPANCY_DAILY[Event Date],\"MMM\"",
+              ")"
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "2e48f53d-227d-45d9-a6c3-0746ce484e13",
+            "sortByColumn": "Month Number",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "MONTH(",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]",
+              ")"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "8ac0cc74-83a3-4fd9-bf8c-4ca6487e18cb",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          },
+          {
+            "name": "WEEKDAYSORT",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-1,7,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-8,6,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-15,5,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-22,4,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-29,3,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-31,2,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()-61,1,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+6,8,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+13,9,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+20,10,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+27,11,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+31,12,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+61,13,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+91,14,",
+              "    UNIT_OCCUPANCY_DAILY[Event Date]=TODAY()+121,15",
+              "    )"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "1abb5e16-8b41-47c3-b6e9-bcc45ef0e4d7",
+            "summarizeBy": "sum",
             "type": "calculated"
           }
         ],
@@ -1570,6 +1649,10 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -1937,12 +2020,9 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"),",
-                "    ENTRATA_BI_Database = Source{[Name=\"ENTRATA_BI\",Kind=\"Database\"]}[Data],",
-                "    DASHBOARD_Schema = ENTRATA_BI_Database{[Name=\"DASHBOARD\",Kind=\"Schema\"]}[Data],",
-                "    PROPERTY_AGE_RECEIVABLES_MONTHLY_View = DASHBOARD_Schema{[Name=\"PROPERTY_AGE_RECEIVABLES_MONTHLY\",Kind=\"View\"]}[Data]",
+                "    Source = Value.NativeQuery(Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"){[Name=\"ENTRATA_BI\"]}[Data], \"SELECT DISTINCT *#(lf)FROM #(lf)ENTRATA_BI.DASHBOARD.PROPERTY_AGE_RECEIVABLES_MONTHLY\", null, [EnableFolding=true])",
                 "in",
-                "    PROPERTY_AGE_RECEIVABLES_MONTHLY_View"
+                "    Source"
               ],
               "type": "m"
             }
@@ -2408,7 +2488,11 @@
         "annotations": [
           {
             "name": "PBI_ResultType",
-            "value": "Exception"
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -2756,12 +2840,9 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"),",
-                "    ENTRATA_BI_Database = Source{[Name=\"ENTRATA_BI\",Kind=\"Database\"]}[Data],",
-                "    DASHBOARD_Schema = ENTRATA_BI_Database{[Name=\"DASHBOARD\",Kind=\"Schema\"]}[Data],",
-                "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY_View = DASHBOARD_Schema{[Name=\"TRANSACTION_CHARGES_COLLECTIONS_MONTHLY\",Kind=\"View\"]}[Data]",
+                "    Source = Value.NativeQuery(Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"){[Name=\"ENTRATA_BI\"]}[Data], \"SELECT DISTINCT * #(lf)FROM #(lf)ENTRATA_BI.DASHBOARD.TRANSACTION_CHARGES_COLLECTIONS_MONTHLY\", null, [EnableFolding=true])",
                 "in",
-                "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY_View"
+                "    Source"
               ],
               "type": "m"
             }
@@ -2837,10 +2918,7 @@
               "RETURN",
               "IF(",
               "    TotalSquareFeet = 0,0,",
-              "    DIVIDE(",
-              "        TotalScheduledRent,",
-              "        TotalSquareFeet",
-              "    )",
+              "    TotalScheduledRent/TotalSquareFeet",
               ")"
             ],
             "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
@@ -2948,7 +3026,8 @@
               "    COUNTROWS(",
               "        MAINTENANCE_REQUEST_DAILY",
               "    ),",
-              "    MAINTENANCE_REQUEST_DAILY[Maintenance Status Type] = \"Open\"",
+              "    MAINTENANCE_REQUEST_DAILY[Maintenance Status Type] = \"Open\" && YEAR(MAINTENANCE_REQUEST_DAILY[Opened On])=YEAR(TODAY()) &&",
+              "    MAINTENANCE_REQUEST_DAILY[Opened On]<=TODAY()",
               ")"
             ],
             "formatString": "0",
@@ -2964,7 +3043,12 @@
             ],
             "expression": [
               "",
-              "AVERAGE(MAINTENANCE_REQUEST_DAILY[Hours To Close])/24"
+              "CALCULATE(",
+              "    AVERAGE(MAINTENANCE_REQUEST_DAILY[Hours To Close])/24 ,",
+              "    MAINTENANCE_REQUEST_DAILY[Hours To Close]/24 > 0  &&",
+              "    YEAR(MAINTENANCE_REQUEST_DAILY[Opened On]) = YEAR(TODAY()) && ",
+              "    MAINTENANCE_REQUEST_DAILY[Opened On] < TODAY()",
+              ")"
             ],
             "lineageTag": "f4129f0f-7233-41fd-aee7-c4fc7a918439"
           },
@@ -2972,32 +3056,15 @@
             "name": "%Change-AMD",
             "expression": [
               "",
-              "VAR FilteredData = ",
-              "FILTER(",
-              "    UNIT_SPACE_RENT_GROWTH_DAILY,",
-              "    UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent] <> 0 &&",
-              "    NOT ISBLANK(",
-              "        UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent]",
-              "    ) &&",
-              "    UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent] <> 0 && ",
-              "    NOT ISBLANK(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent])",
-              ")",
-              "VAR Numerator =",
-              "SUMX(",
-              "    FilteredData,",
-              "    UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent] - UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]",
-              ")",
-              "VAR Denominator =",
-              "SUMX(",
-              "    FilteredData,",
-              "    UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]",
-              ")",
-              "RETURN",
-              "IF(",
-              "    Denominator = 0 ,",
-              "    0,",
-              "    Numerator/Denominator",
-              ")"
+              "CALCULATE(",
+              "    DIVIDE(",
+              "        SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent])-SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
+              "        SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
+              "        0",
+              "    ),",
+              "    UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent]<>0 && UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent]  <> BLANK() && UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]<>0",
+              "    && UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent] <> BLANK()",
+              ")+0"
             ],
             "formatString": "0.00%;-0.00%;0.00%",
             "lineageTag": "7feec523-af15-41c8-b252-c9d201b4bada"
@@ -3025,7 +3092,7 @@
             "lineageTag": "f0911748-ae70-4f62-b16d-7b899ba0e79f"
           },
           {
-            "name": "ChargeRecoveryRate",
+            "name": "% Collected1",
             "expression": [
               "",
               "VAR TotalCurrentCharges =",
@@ -3061,15 +3128,20 @@
             "name": "NetChargeAmount",
             "expression": [
               "",
-              "SUMX(",
+              "(SUM(TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Current Charges]) -",
+              "((SUM(TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Current Receipts]) + ",
+              "SUM(TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Prior Receipts])) +",
+              "SUM(TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Credit Concessions])))",
+              "",
+              "/*SUMX(",
               "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY,",
               "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Current Charges] -",
-              "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Current Receipts] +",
-              "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Prior Receipts] + ",
+              "    (TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Current Receipts] +",
+              "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Prior Receipts]) + ",
               "    TRANSACTION_CHARGES_COLLECTIONS_MONTHLY[Credit Concessions]",
-              ")"
+              ")*/"
             ],
-            "formatString": "0.00%;-0.00%;0.00%",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "3b7751d3-db36-4d99-8ca0-a767616b00a9"
           },
           {
@@ -3214,6 +3286,142 @@
             ],
             "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
             "lineageTag": "53d0e880-ffb1-473a-a27f-86e6931823bd"
+          },
+          {
+            "name": "%change-AMD1",
+            "expression": [
+              "",
+              "IF(",
+              "    NOT (ISBLANK(SUM(UNIT_OCCUPANCY_DAILY[Effective Rent]))) &&",
+              "    NOT (ISBLANK(SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]))) &&",
+              "    SUM(UNIT_OCCUPANCY_DAILY[Effective Rent])<> 0 &&",
+              "    SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]) <> 0,",
+              "    (SUM(UNIT_OCCUPANCY_DAILY[Effective Rent]) - SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]))/SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
+              "    0",
+              ")",
+              ""
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "23716c68-af0f-4029-831b-a99b0293b54b"
+          },
+          {
+            "name": "Occupancy%",
+            "expression": [
+              "",
+              "VAR SumRentableUnitCount =",
+              "SUM(",
+              "    UNIT_OCCUPANCY_DAILY[Rentable Unit Count]",
+              ")",
+              "",
+              "var SumOccupiedUnitCount = ",
+              "SUM(",
+              "    UNIT_OCCUPANCY_DAILY[Occupied Unit Count]",
+              ")",
+              "",
+              "RETURN",
+              "IF(",
+              "    SumRentableUnitCount=0,",
+              "    0,",
+              "    DIVIDE(",
+              "        SumOccupiedUnitCount,",
+              "        SumRentableUnitCount",
+              "    )",
+              ")"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "10f2d27c-228b-49cc-8f44-3a2fdf92ecdf"
+          },
+          {
+            "name": "Average Schedule Rent",
+            "expression": [
+              "",
+              "AVERAGE(",
+              "    UNIT_OCCUPANCY_DAILY[Scheduled Rent Occupied Units]",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "lineageTag": "f563e23f-c9e9-4a12-801d-9303e8ea92e5"
+          },
+          {
+            "name": "Avg MarketRent",
+            "expression": [
+              "",
+              "AVERAGE(",
+              "    UNIT_OCCUPANCY_DAILY[Market Rent]",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "lineageTag": "216633e5-5562-46b9-91e8-828d965485da"
+          },
+          {
+            "name": "Average BudgetedRent",
+            "expression": [
+              "",
+              "AVERAGE(UNIT_OCCUPANCY_DAILY[Budgeted Rent])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "lineageTag": "0ecd4e98-57b4-4696-8353-2cd1e5e25d39"
+          },
+          {
+            "name": "Average EffectiveRent",
+            "expression": [
+              "",
+              "AVERAGE(UNIT_OCCUPANCY_DAILY[Effective Rent])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "lineageTag": "85a301a0-415d-4673-85f7-a52b7033c3ef"
+          },
+          {
+            "name": "%Change-AMD2",
+            "expression": [
+              "",
+              "var effectiverent = SUM(UNIT_OCCUPANCY_DAILY[Effective Rent])",
+              "var prioreffectiverent=SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent])",
+              "RETURN",
+              "IF(",
+              "    not ISBLANK(effectiverent) && effectiverent <> 0 && ",
+              "    not ISBLANK(prioreffectiverent)&& prioreffectiverent <>0,",
+              "    (effectiverent - prioreffectiverent)/prioreffectiverent,",
+              "    0",
+              ")"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "03b1b252-0c21-4b67-b965-9894aa94a297"
+          },
+          {
+            "name": "SAmple",
+            "expression": [
+              "",
+              "CALCULATE(",
+              "    DIVIDE(",
+              "        SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent])-SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
+              "        SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
+              "        0",
+              "    ),",
+              "    UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent]<>0 && not ISBLANK(UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent])  && UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]<>0",
+              "    && not ISBLANK(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent])",
+              ")+0"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "73852f22-2f99-4df8-99d9-60942cb7c258"
+          },
+          {
+            "name": "Occupancy %1",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "DIVIDE(",
+              "    SUM(UNIT_OCCUPANCY_DAILY[Occupied Unit Count]),",
+              "    SUM(UNIT_OCCUPANCY_DAILY[Rentable Unit Count]),",
+              "    0",
+              "    )"
+            ],
+            "lineageTag": "18f2db77-bb5a-4771-be48-87c401cdef9e"
           }
         ],
         "partitions": [
@@ -3633,6 +3841,16 @@
       },
       {
         "name": "MAINTENANCE_REQUEST_DAILY",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "Client ID",
@@ -4070,6 +4288,92 @@
             "lineageTag": "495645cc-72e5-4312-98ab-7c7c98c627f1",
             "summarizeBy": "none",
             "type": "calculated"
+          },
+          {
+            "name": "Opened On1",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              },
+              {
+                "property": "DataType"
+              }
+            ],
+            "dataType": "string",
+            "expression": "FORMAT(MAINTENANCE_REQUEST_DAILY[Opened On],\"MMM\")",
+            "lineageTag": "5146055a-aa52-425c-bdb2-b21d250e9b7b",
+            "sortByColumn": "month num",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "month num",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "DataType"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "MONTH(",
+              "    MAINTENANCE_REQUEST_DAILY[Opened On]",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "ce961307-f1e1-4c22-a931-0c1e74a5b0e1",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          },
+          {
+            "name": "MONTHNumber",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 1,\"Jan\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 2,\"Feb\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 3,\"Mar\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 4,\"Apr\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 5,\"May\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 6,\"Jun\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 7,\"Jul\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 8,\"Aug\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 9,\"Sept\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 10,\"Oct\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 11,\"Nov\",",
+              "    MAINTENANCE_REQUEST_DAILY[month num] = 12,\"Dec\"",
+              ")"
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "baabd062-8e22-450d-9c4f-e6017c099e45",
+            "sortByColumn": "month num",
+            "summarizeBy": "none",
+            "type": "calculated"
           }
         ],
         "lineageTag": "ea3babfe-861d-423c-bfdc-46c8a97755e5",
@@ -4080,12 +4384,9 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"),",
-                "    ENTRATA_BI_Database = Source{[Name=\"ENTRATA_BI\",Kind=\"Database\"]}[Data],",
-                "    DASHBOARD_Schema = ENTRATA_BI_Database{[Name=\"DASHBOARD\",Kind=\"Schema\"]}[Data],",
-                "    MAINTENANCE_REQUEST_DAILY_View = DASHBOARD_Schema{[Name=\"MAINTENANCE_REQUEST_DAILY\",Kind=\"View\"]}[Data]",
+                "    Source = Value.NativeQuery(Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"){[Name=\"ENTRATA_BI\"]}[Data], \"SELECT DISTINCT * #(lf)FROM #(lf)ENTRATA_BI.DASHBOARD.MAINTENANCE_REQUEST_DAILY\", null, [EnableFolding=true])",
                 "in",
-                "    MAINTENANCE_REQUEST_DAILY_View"
+                "    Source"
               ],
               "type": "m"
             }
@@ -4094,6 +4395,16 @@
       },
       {
         "name": "UNIT_SPACE_RENT_GROWTH_DAILY",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "Client ID",
@@ -4631,12 +4942,9 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"),",
-                "    ENTRATA_BI_Database = Source{[Name=\"ENTRATA_BI\",Kind=\"Database\"]}[Data],",
-                "    DASHBOARD_Schema = ENTRATA_BI_Database{[Name=\"DASHBOARD\",Kind=\"Schema\"]}[Data],",
-                "    UNIT_SPACE_RENT_GROWTH_DAILY_View = DASHBOARD_Schema{[Name=\"UNIT_SPACE_RENT_GROWTH_DAILY\",Kind=\"View\"]}[Data]",
+                "    Source = Value.NativeQuery(Snowflake.Databases(\"jsb49008.us-east-1.snowflakecomputing.com\",\"COMPUTE_WH\"){[Name=\"ENTRATA_BI\"]}[Data], \"SELECT DISTINCT * #(lf)FROM #(lf)ENTRATA_BI.DASHBOARD.UNIT_SPACE_RENT_GROWTH_DAILY\", null, [EnableFolding=true])",
                 "in",
-                "    UNIT_SPACE_RENT_GROWTH_DAILY_View"
+                "    Source"
               ],
               "type": "m"
             }
@@ -5073,33 +5381,6 @@
         ],
         "lineageTag": "111bfbea-0229-4a2f-bbd9-ee4ed35976fb",
         "measures": [
-          {
-            "name": "Occupancy%",
-            "expression": [
-              "",
-              "VAR SumRentableUnitCount =",
-              "SUM(",
-              "    UNIT_OCCUPANCY_DAILY[Rentable Unit Count]",
-              ")",
-              "",
-              "var SumOccupiedUnitCount = ",
-              "SUM(",
-              "    UNIT_OCCUPANCY_DAILY[Occupied Unit Count]",
-              ")",
-              "",
-              "RETURN",
-              "IF(",
-              "    SumRentableUnitCount=0,",
-              "    0,",
-              "    DIVIDE(",
-              "        SumOccupiedUnitCount,",
-              "        SumRentableUnitCount",
-              "    )",
-              ")"
-            ],
-            "formatString": "0.00%;-0.00%;0.00%",
-            "lineageTag": "10f2d27c-228b-49cc-8f44-3a2fdf92ecdf"
-          },
           {
             "name": "Lease End<30",
             "annotations": [
