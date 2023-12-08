@@ -3318,9 +3318,7 @@
             "name": "Average Schedule Rent",
             "expression": [
               "",
-              "AVERAGE(",
-              "    UNIT_OCCUPANCY_DAILY[Scheduled Rent Occupied Units]",
-              ")"
+              "AVERAGE(UNIT_OCCUPANCY_DAILY[Scheduled Rent Occupied Units])"
             ],
             "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
             "lineageTag": "f563e23f-c9e9-4a12-801d-9303e8ea92e5"
@@ -3329,9 +3327,7 @@
             "name": "Avg MarketRent",
             "expression": [
               "",
-              "AVERAGE(",
-              "    UNIT_OCCUPANCY_DAILY[Market Rent]",
-              ")"
+              "AVERAGE(UNIT_OCCUPANCY_DAILY[Market Rent])"
             ],
             "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
             "lineageTag": "216633e5-5562-46b9-91e8-828d965485da"
@@ -5295,6 +5291,48 @@
             "lineageTag": "c6fcb887-fff3-49f7-8aa6-027a51bb8f4e",
             "sourceColumn": "Audit Inserted On",
             "summarizeBy": "none"
+          },
+          {
+            "name": "Opened On2",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "expression": "FORMAT(LEASE_EXPIRATION_DAILY[Month],\"MMM\")",
+            "isDataTypeInferred": true,
+            "lineageTag": "3f1c6a8b-442c-4441-8db6-47bb8da4cdc9",
+            "sortByColumn": "month number1",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "month number1",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "MONTH(",
+              "    LEASE_EXPIRATION_DAILY[Month]",
+              ")"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "e28fd6d5-033e-4d3f-a0b3-092e2e769fb9",
+            "summarizeBy": "sum",
+            "type": "calculated"
           }
         ],
         "lineageTag": "aa6949ca-6b4b-4adf-968f-04bfbfdbb9f0",
