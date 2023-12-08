@@ -3288,23 +3288,6 @@
             "lineageTag": "53d0e880-ffb1-473a-a27f-86e6931823bd"
           },
           {
-            "name": "%change-AMD1",
-            "expression": [
-              "",
-              "IF(",
-              "    NOT (ISBLANK(SUM(UNIT_OCCUPANCY_DAILY[Effective Rent]))) &&",
-              "    NOT (ISBLANK(SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]))) &&",
-              "    SUM(UNIT_OCCUPANCY_DAILY[Effective Rent])<> 0 &&",
-              "    SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]) <> 0,",
-              "    (SUM(UNIT_OCCUPANCY_DAILY[Effective Rent]) - SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]))/SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
-              "    0",
-              ")",
-              ""
-            ],
-            "formatString": "0.00%;-0.00%;0.00%",
-            "lineageTag": "23716c68-af0f-4029-831b-a99b0293b54b"
-          },
-          {
             "name": "Occupancy%",
             "expression": [
               "",
@@ -3372,40 +3355,6 @@
             "lineageTag": "85a301a0-415d-4673-85f7-a52b7033c3ef"
           },
           {
-            "name": "%Change-AMD2",
-            "expression": [
-              "",
-              "var effectiverent = SUM(UNIT_OCCUPANCY_DAILY[Effective Rent])",
-              "var prioreffectiverent=SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent])",
-              "RETURN",
-              "IF(",
-              "    not ISBLANK(effectiverent) && effectiverent <> 0 && ",
-              "    not ISBLANK(prioreffectiverent)&& prioreffectiverent <>0,",
-              "    (effectiverent - prioreffectiverent)/prioreffectiverent,",
-              "    0",
-              ")"
-            ],
-            "formatString": "0.00%;-0.00%;0.00%",
-            "lineageTag": "03b1b252-0c21-4b67-b965-9894aa94a297"
-          },
-          {
-            "name": "SAmple",
-            "expression": [
-              "",
-              "CALCULATE(",
-              "    DIVIDE(",
-              "        SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent])-SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
-              "        SUM(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]),",
-              "        0",
-              "    ),",
-              "    UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent]<>0 && not ISBLANK(UNIT_SPACE_RENT_GROWTH_DAILY[Effective Rent])  && UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent]<>0",
-              "    && not ISBLANK(UNIT_SPACE_RENT_GROWTH_DAILY[Prior Effective Rent])",
-              ")+0"
-            ],
-            "formatString": "0.00%;-0.00%;0.00%",
-            "lineageTag": "73852f22-2f99-4df8-99d9-60942cb7c258"
-          },
-          {
             "name": "Occupancy %1",
             "annotations": [
               {
@@ -3422,6 +3371,20 @@
               "    )"
             ],
             "lineageTag": "18f2db77-bb5a-4771-be48-87c401cdef9e"
+          },
+          {
+            "name": "AverageHOURStoclose",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "AVERAGE(MAINTENANCE_REQUEST_DAILY[Hours To Close])/24"
+            ],
+            "lineageTag": "78514901-f1a8-4c5a-b273-3875c542897d"
           }
         ],
         "partitions": [
