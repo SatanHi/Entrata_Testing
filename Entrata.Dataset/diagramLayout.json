@@ -4,7 +4,7 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 568,
+        "x": 2376.3972602739727,
         "y": 0
       },
       "nodes": [
@@ -158,6 +158,58 @@
           "nodeLineageTag": "f206c47f-480d-49ef-90a4-688c1c3534ef",
           "size": {
             "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3692,
+            "y": 74
+          },
+          "nodeIndex": "Age Receivable Filter",
+          "nodeLineageTag": "5083bcff-9957-4498-a7f3-3fc4cc9c5f48",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3976,
+            "y": 98
+          },
+          "nodeIndex": "TimeSeries",
+          "nodeLineageTag": "8ad968c8-da57-4e8f-9050-d0575c2221cf",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4260,
+            "y": 0
+          },
+          "nodeIndex": "LEAD_PROGRESSION_MONTHLY_FUNNEL",
+          "nodeLineageTag": "fb553f65-d944-4637-be45-fce3faed5d10",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4544,
+            "y": 74
+          },
+          "nodeIndex": "Parameter",
+          "nodeLineageTag": "857d293a-805e-4025-965a-3562fde6010a",
+          "size": {
+            "height": 152,
             "width": 234
           },
           "zIndex": 0
